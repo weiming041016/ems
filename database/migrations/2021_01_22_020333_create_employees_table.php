@@ -17,6 +17,7 @@ class CreateEmployeesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
+            $table->date('date_of_joining');
             $table->date('start_of_contract');
             $table->date('end_of_contract');
             $table->unsignedBigInteger('department_id')->nullable();

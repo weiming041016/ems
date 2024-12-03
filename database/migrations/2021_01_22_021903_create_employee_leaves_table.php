@@ -16,13 +16,11 @@ class CreateEmployeeLeavesTable extends Migration
         Schema::create('employee_leaves', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
-            $table->integer('annual');
-            $table->integer('mc');
-            $table->integer('hospitalization');
-            $table->integer('maternity');
-            $table->integer('used_leaves');
+            $table->enum('type_of_leave', ['annual', 'mc', 'hospitalization', 'maternity','paternity', 'unpaid']);
+            $table->integer('total_days')->default(0);
+            $table->integer('used_days')->default(0);
             $table->timestamps();
-
+        
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
