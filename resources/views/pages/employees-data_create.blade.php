@@ -77,6 +77,16 @@
                   <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
               </div>
+
+              <div class="col-sm-12 col-lg-6">
+                <div class="form-group">
+                  <label for="date_of_join">Joining Date:</label>
+                  <input type="date" name="date_of_join" id="date_of_join" class="form-control @error('date_of_join') is-invalid @enderror" placeholder="Enter Joining date" required>
+                </div>
+                @error('date_of_join')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+              </div>
             </div>
           </div>
           
