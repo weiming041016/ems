@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EmployeeLeave;
 use Illuminate\Http\Request;
+use App\Models\Employee;
 
 class EmployeeLeavesController extends Controller
 {
@@ -18,7 +19,7 @@ class EmployeeLeavesController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -28,7 +29,10 @@ class EmployeeLeavesController extends Controller
      */
     public function create()
     {
-        //
+        $employee = auth()->user()->employee;  // Assuming the user has a related 'employee' model
+        $gender = $employee ? $employee->employeeDetail->gender : null;
+
+        return view('pages.employees-leave-request_create', compact('gender'));
     }
 
     /**
