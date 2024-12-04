@@ -18,6 +18,18 @@
             </div>
         @endif
         {{-- <p>Available Leave : {{employee->leave}}</p> --}}
+              <div class="row">
+                  <div class="col-sm-12 col-lg-6">
+                      <div class="form-group">
+                          <label for="available_leave">Available Leave:</label>
+                          <ul>
+                            @foreach($leaves as $leave)
+                            <li>{{ $leave->type_of_leave }} : {{ $leave->total_days }}</li>
+                            @endforeach
+                          </ul>
+                      </div>
+                  </div>
+              </div>
         <form action="{{ route('employees-leave-request.store') }}" method="POST">
           @csrf
           <input type="hidden" name="employee_id" value="{{ auth()->user()->employee->id }}">

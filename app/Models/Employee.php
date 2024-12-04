@@ -38,7 +38,7 @@ class Employee extends Model
     }
 
     public function employeeLeave() {
-        return $this->hasOne(EmployeeLeave::class);
+        return $this->hasMany(EmployeeLeave::class,'employee_id');
     }
 
     public function employeeLeaveRequest() {
