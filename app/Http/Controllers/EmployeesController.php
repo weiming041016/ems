@@ -77,7 +77,7 @@ class EmployeesController extends Controller
             'position_id' => $request->input('position_id'),
         ]);
 
-        EmployeeDetail::create([
+        $employee_details = EmployeeDetail::create([
             'employee_id' => $employee->id,
             'identity_number' => $request->input('identity_number'),
             'name' => $request->input('name'),
@@ -117,7 +117,7 @@ class EmployeesController extends Controller
         }
 
         // 如果是女性员工，给予产假
-        if ($employee->gender == 'female') {
+        if ($employee_details->gender == 'F') {
             $maternityLeave = 98; // 女员工产假98天
         }
 
@@ -146,7 +146,7 @@ class EmployeesController extends Controller
         ]);
 
         // 创建产假记录（仅女性员工）
-        if ($employee->gender == 'female') {
+        if ( $employee_details->gender == 'F') {
             EmployeeLeave::create([
                 'employee_id' => $employee->id,
                 'type_of_leave' => 'maternity',
@@ -156,7 +156,7 @@ class EmployeesController extends Controller
         }
 
         // 创建陪产假记录（仅男性员工）
-        if ($employee->gender == 'male') {
+        if ( $employee_details->gender == 'M') {
             $paternityLeave = 7; // 假设男性员工有7天陪产假
             EmployeeLeave::create([
                 'employee_id' => $employee->id,
