@@ -13,18 +13,7 @@ class CreateEmployeeLeavesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee_leaves', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('employee_id');
-            $table->integer('annual');
-            $table->integer('mc');
-            $table->integer('hospitalization');
-            $table->integer('maternity');
-            $table->integer('used_leaves');
-            $table->timestamps();
-
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-        });
+      
     }
 
     /**

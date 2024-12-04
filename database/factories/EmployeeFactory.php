@@ -29,6 +29,7 @@ class EmployeeFactory extends Factory
                 return User::factory()->create()->id;
             },
             'name' => $this->faker->name(),
+            'date_of_joining' => $this->faker->date(),
             'start_of_contract' => $this->faker->date(),
             'end_of_contract' => $this->faker->date(),
             'department_id' => function() {
