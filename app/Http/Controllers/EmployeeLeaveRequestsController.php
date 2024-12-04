@@ -41,7 +41,9 @@ class EmployeeLeaveRequestsController extends Controller
     {
         $employee = auth()->user()->employee;  // Assuming the user has a related 'employee' model
         $gender = $employee ? $employee->employeeDetail->gender : null;  // Fetch gender from the employee model
-        return view('pages.employees-leave-request_create', compact('gender'));
+        $leaves = $employee->employeeLeave ?? collect();
+
+        return view('pages.employees-leave-request_create', compact('gender','leaves'));
     }
 
     /**
