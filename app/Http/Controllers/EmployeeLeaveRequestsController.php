@@ -193,19 +193,76 @@ class EmployeeLeaveRequestsController extends Controller
      */
     public function destroy(EmployeeLeaveRequest $employeeLeaveRequest)
     {
+        // 找到对应的 leave 数据
+        $employeeLeave = EmployeeLeave::where('employee_id', $employeeLeaveRequest->employee_id)
+            ->where('type_of_leave', $employeeLeaveRequest->type_of_leave)
+            ->first();
+    
+        if ($employeeLeave) {
+            // 计算被拒绝的天数
+            $from = Carbon::parse($employeeLeaveRequest->from);
+            $to = Carbon::parse($employeeLeaveRequest->to);
+    
+            Carbon::setWeekendDays([Carbon::SUNDAY, Carbon::SATURDAY]);
+            $daysRejected = $from->diffInWeekdays($to) + 1;
+    
+            // 将被拒绝的天数退回到 used_days
+            $employeeLeave->decrement('used_days', $daysRejected);
+        }
+    
+        // 更新请假请求的状态为 REJECTED
         $this->employeeLeaveRequests->where('id', $employeeLeaveRequest->id)
             ->update([
                 'status' => 'REJECTED',
                 'checked_by' => auth()->user()->employee->id,
-                'comment' => request()->input('comment')
+                'comment' => request()->input('comment'),
             ]);
-
+    
+        // 创建日志记录
         Log::create([
-            'description' => auth()->user()->employee->name . " rejected ". $employeeLeaveRequest->employee->name  ."'s leave request from '" . $employeeLeaveRequest->from . "' to '" . $employeeLeaveRequest->to . "'"
+            'description' => auth()->user()->employee->name . " rejected " . $employeeLeaveRequest->employee->name  . "'s leave request from '" . $employeeLeaveRequest->from . "' to '" . $employeeLeaveRequest->to . "'"
         ]);
-        
-        return redirect()->route('employees-leave-request')->with('status', 'Successfully rejected employee leave request.');   
+    
+        return redirect()->route('employees-leave-request')->with('status', 'Successfully rejected employee leave request.');
     }
+
+    public function cancel(EmployeeLeaveRequest $employeeLeaveRequest)
+    {
+        // 确保当前用户只能取消自己的请求
+        if (auth()->user()->employee->id !== $employeeLeaveRequest->employee_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // 恢复已使用的假期天数
+        $employeeLeave = EmployeeLeave::where('employee_id', $employeeLeaveRequest->employee_id)
+            ->where('type_of_leave', $employeeLeaveRequest->type_of_leave)
+            ->first();
+
+        if ($employeeLeave) {
+            $from = Carbon::parse($employeeLeaveRequest->from);
+            $to = Carbon::parse($employeeLeaveRequest->to);
+            Carbon::setWeekendDays([Carbon::SUNDAY, Carbon::SATURDAY]);
+
+            // 计算假期天数
+            $daysToRestore = ($from->isSameDay($to)) ? 1 : $from->diffInWeekdays($to) + 1;
+
+            // 更新假期表
+            $employeeLeave->decrement('used_days', $daysToRestore);
+        }
+
+        // 更新请求状态
+        $employeeLeaveRequest->update([
+            'status' => 'CANCELLED',
+        ]);
+
+        // 添加日志
+        Log::create([
+            'description' => auth()->user()->employee->name . " cancelled their leave request from '{$employeeLeaveRequest->from}' to '{$employeeLeaveRequest->to}'"
+        ]);
+
+        return redirect()->route('employees-leave-request')->with('status', 'Leave request cancelled successfully.');
+    }
+
 
     public function print () 
     {

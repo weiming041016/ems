@@ -80,7 +80,7 @@
               <div class="col-sm-12 col-lg-6">
                 <div class="form-group">
                   <label for="attach">Attach:</label>
-                  <input type="file" name="attach" id="attach" class="form-control-file @error('attach') is-invalid @enderror" required>
+                  <input type="file" name="attach" id="attach" class="form-control-file @error('attach') is-invalid @enderror" >
                 </div>
                 @error('attach')
                   <div class="alert alert-danger">{{ $message }}</div>

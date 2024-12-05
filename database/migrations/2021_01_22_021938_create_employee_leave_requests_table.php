@@ -21,7 +21,7 @@ class CreateEmployeeLeaveRequestsTable extends Migration
             $table->date('from');
             $table->date('to');
             $table->string('attach')->nullable();
-            $table->enum('status', ['WAITING_FOR_APPROVAL', 'APPROVED', 'REJECTED'])->default('WAITING_FOR_APPROVAL');
+            $table->enum('status', ['WAITING_FOR_APPROVAL', 'APPROVED', 'REJECTED','CANCELLED'])->default('WAITING_FOR_APPROVAL');
             $table->text('reject_reason')->nullable();
             $table->string('comment')->nullable();
             $table->unsignedBigInteger('checked_by')->nullable();
