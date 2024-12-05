@@ -41,7 +41,12 @@ class EmployeeLeaveRequestsController extends Controller
     {
         $employee = auth()->user()->employee;  // Assuming the user has a related 'employee' model
         $gender = $employee ? $employee->employeeDetail->gender : null;  // Fetch gender from the employee model
-        $leaves = $employee->employeeLeave ?? collect();
+        $leaves = EmployeeLeave::where('employee_id', $employee->id)
+        ->get()
+        ->map(function ($leave) {
+            $leave->remaining_days = $leave->total_days - $leave->used_days;
+            return $leave;
+        });
 
         return view('pages.employees-leave-request_create', compact('gender','leaves'));
     }
@@ -54,34 +59,49 @@ class EmployeeLeaveRequestsController extends Controller
      */
     public function store(StoreEmployeeLeaveRequest $request)
     {
-        $employeeLeave = EmployeeLeave::where('employee_id', $request->input('employee_id'))->first();
-
+        $employeeLeave = EmployeeLeave::where('employee_id', $request->input('employee_id'))
+            ->where('type_of_leave', $request->input('type_of_leave'))
+            ->first();
+    
+        if (!$employeeLeave) {
+            return back()->with('status', 'Leave type not found for the employee.');
+        }
+    
         $from = Carbon::parse($request->input('from'));
         $to = Carbon::parse($request->input('to'));
-
-        Carbon::setWeekendDays([
-            Carbon::SUNDAY,
-        ]);
-
-        $diff = $from->diffInWeekdays($to);
-
-        if($employeeLeave->leaves_quota - $employeeLeave->used_leaves < $diff) {
-            return back()->with('status', 'You take too much days off.');
+    
+        Carbon::setWeekendDays([Carbon::SUNDAY, Carbon::SATURDAY]);
+    
+        // 如果 from 和 to 是同一天，假期天数设为 1；否则正常计算
+        $daysRequested = $from->diffInWeekdays($to) + 1;
+    
+        // 检查是否有足够的假期
+        if ($employeeLeave->total_days - $employeeLeave->used_days < $daysRequested) {
+            return back()->with('status', 'Insufficient leave days available.');
         }
-
+    
+        // 更新 used_days
+        $employeeLeave->increment('used_days', $daysRequested);
+    
+        // 创建请假请求
         $this->employeeLeaveRequests->create([
             'employee_id' => $request->input('employee_id'),
-            'from' => $request->input('from'),
-            'to' => $request->input('to'),
-            'message' => $request->input('message')
+            'from' => $from,
+            'to' => $to,
+            'message' => $request->input('message'),
+            'type_of_leave' => $request->input('type_of_leave'),
+            'status' => 'WAITING_FOR_APPROVAL',
         ]);
-        
+    
+        // 记录日志
         Log::create([
-            'description' => auth()->user()->employee->name . " created a leave request from '" . $request->input('from') . "' to '" . $request->input('to') . "'"
+            'description' => auth()->user()->employee->name . " created a leave request from '{$from}' to '{$to}'"
         ]);
-
+    
         return redirect()->route('employees-leave-request')->with('status', 'Successfully created an employee leave request.');
     }
+    
+    
 
     /**
      * Display the specified resource.
@@ -98,11 +118,9 @@ class EmployeeLeaveRequestsController extends Controller
         $from = Carbon::parse($employeeLeaveRequest->from);
         $to = Carbon::parse($employeeLeaveRequest->to);
 
-        Carbon::setWeekendDays([
-            Carbon::SUNDAY,
-        ]);
+        Carbon::setWeekendDays([Carbon::SUNDAY, Carbon::SATURDAY]);
 
-        $diff = $from->diffInWeekdays($to);
+        $diff = $from->diffInWeekdays($to)+1;
 
         return view('pages.employees-leave-request_show', compact('employeeLeaveRequest', 'employeeLeave', 'diff'));
     }
@@ -146,11 +164,9 @@ class EmployeeLeaveRequestsController extends Controller
             $from = Carbon::parse($employeeLeaveRequest->from);
             $to = Carbon::parse($employeeLeaveRequest->to);
     
-            Carbon::setWeekendDays([
-                Carbon::SUNDAY,
-            ]);
+            Carbon::setWeekendDays([Carbon::SUNDAY, Carbon::SATURDAY]);
     
-            $diff = $from->diffInWeekdays($to);
+            $diff = $from->diffInWeekdays($to)+1;
 
             $this->employeeLeaveRequests->where('id', $employeeLeaveRequest->id)
                 ->update([
