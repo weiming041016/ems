@@ -87,6 +87,7 @@
         Route::post('/employees-leave-request', [EmployeeLeaveRequestsController::class, 'store'])->name('employees-leave-request.store');
         Route::put('/employees-leave-request/{employeeLeaveRequest}', [EmployeeLeaveRequestsController::class, 'update'])->name('employees-leave-request.update');
         Route::delete('/employees-leave-request/{employeeLeaveRequest}', [EmployeeLeaveRequestsController::class, 'destroy'])->name('employees-leave-request.destroy');
+        Route::patch('/employees-leave-request/{employeeLeaveRequest}/cancel', [EmployeeLeaveRequestsController::class, 'cancel'])->name('employees-leave-request.cancel');
         Route::get('/attendances', [AttendancesController::class, 'index'])->name('attendances');
         Route::get('/attendances/print', [AttendancesController::class, 'print'])->name('attendances.print');
         Route::post('/attendances', [AttendancesController::class, 'store'])->name('attendances.store');

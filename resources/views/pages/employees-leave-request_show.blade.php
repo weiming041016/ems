@@ -39,9 +39,9 @@
             <div class="row">
               <div class="col-sm-12 col-lg-6">
                 <div class="form-group">
-                  <label for="leaveQuota">Employee Leaves:</label>
-                  <input type="number" name="leaveQuota" id="leaveQuota" value="{{ $employeeLeave->leaves_quota }}" class="form-control-plaintext" readonly>
-                </div>
+                  <label for="typeLeave">Type of Leave:</label>
+                  <input type="text" name="typeLeave" id="typeLeave" value="{{ $employeeLeave->type_of_leave }}" class="form-control-plaintext" readonly>
+              </div>
               </div>
               <div class="col-sm-12 col-lg-6">
                 <div class="form-group">
@@ -97,6 +97,11 @@
                   <form action="{{ route('employees-leave-request.edit', ['employeeLeaveRequest' => $employeeLeaveRequest->id]) }}" class="d-inline-block">
                     <button type="submit" class="btn btn-warning mr-2 px-5">Edit</button>
                   </form>
+                  <form action="{{ route('employees-leave-request.cancel', ['employeeLeaveRequest' => $employeeLeaveRequest->id]) }}" method="POST" class="d-inline-block">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-danger mr-2 px-5">Cancel</button>
+                </form>
                 @endif
               </div>
             </div>
@@ -167,3 +172,4 @@
 </div>
 @endsection
 
+//明天改这个
