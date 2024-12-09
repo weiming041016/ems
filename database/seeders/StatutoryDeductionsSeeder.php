@@ -10,6 +10,7 @@ class StatutoryDeductionsSeeder extends Seeder
     public function run()
     {
         // EPF 数据
+
         DB::table('statutory_deductions')->insert([
             [
                 'type' => 'EPF',

@@ -3,7 +3,8 @@
     use App\Http\Controllers\AnnouncementsController;
     use App\Http\Controllers\UsersController;
     use App\Http\Controllers\AttendancesController;
-    use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CalculatesalaryController;
+use App\Http\Controllers\DashboardController;
     use App\Http\Controllers\DepartmentsController;
     use App\Http\Controllers\EmployeeLeaveRequestsController;
     use App\Http\Controllers\EmployeeLeavesController;
@@ -19,6 +20,7 @@
     use App\Http\Controllers\WelcomeController;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
     /*
     |--------------------------------------------------------------------------
@@ -45,6 +47,11 @@
     Route::post('/recruitment-candidates', [RecruitmentCandidatesController::class, 'store'])->name('recruitment-candidates.store');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/salary-data',[CalculatesalaryController::class,'index'])->name('admin.salarydata');
+    Route::get('/admin-salary',[CalculatesalaryController::class,'salarysubmitform'])->name('admin.salaryform.create');
+    Route::post('/admin-salary-submit',[CalculatesalaryController::class,'salarysubmit'])->name('admin.salarysubmit');
+    Route::get('/calculate-salary',[CalculatesalaryController::class,'calculatesalary'])->name('admin.calculatesalary');
 
     Route::middleware('check.access')->group(function() {
         Route::get('/employees-data', [EmployeesController::class, 'index'])->name('employees-data');
@@ -128,5 +135,6 @@
         Route::put('/roles/{role}', [RolesController::class, 'update'])->name('roles.update');
         Route::delete('/roles/{role}', [RolesController::class, 'destroy'])->name('roles.destroy');
         Route::get('/profile', [ProfilesController::class, 'index'])->name('profile');
-        Route::put('/profile/{user}', [ProfilesController::class, 'update'])->name('profile.update');    
+        Route::put('/profile/{user}', [ProfilesController::class, 'update'])->name('profile.update');
+       
     });

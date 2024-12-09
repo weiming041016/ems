@@ -29,6 +29,7 @@ class EmployeeDetailFactory extends Factory
             'identity_number' => $this->faker->randomDigit(),
             'name' => $this->faker->name(),
             'gender' => 'L',
+            'age'=> $this->faker->numberBetween(20, 60),
             'date_of_birth' => $this->faker->date(),
             'email' => $this->faker->email(),
             'phone' => $this->faker->phoneNumber(),
