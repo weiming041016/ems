@@ -41,12 +41,7 @@ class CalculatesalaryController extends Controller
         employees_salary::create($request->all());
         return redirect()->route("admin.salarydata")->with('status', 'Successfully add salary detail.');
     }
-
-
-    public function show($id)
-    {  
-
-    }
+    
 
     public function calculatesalary(){
         $employeesalary=employees_salary::all();
