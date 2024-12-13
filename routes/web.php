@@ -50,6 +50,8 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 
     Route::get('/salary-data',[CalculatesalaryController::class,'index'])->name('admin.salarydata');
     Route::get('/admin-salary',[CalculatesalaryController::class,'salarysubmitform'])->name('admin.salaryform.create');
+    Route::get("/employee-salarydetail/{employee}",[CalculatesalaryController::class,'show'])->name('employee.salarydetail');
+    Route::get("/employee-data/payslip/{payslip}",[CalculatesalaryController::class,'showpayslip'])->name('employee-data.payslip');
     Route::post('/admin-salary-submit',[CalculatesalaryController::class,'salarysubmit'])->name('admin.salarysubmit');
     Route::get('/calculate-salary',[CalculatesalaryController::class,'calculatesalary'])->name('admin.calculatesalary');
 

@@ -32,6 +32,9 @@ class Employee extends Model
     public function employeeSalary(){
         return $this->hasOne(employees_salary::class,"employee_id");
     }
+    public function employeePayroll(){
+        return $this->hasMany(Payroll::class,"employee_id");
+    }
 
     public function checkedBy () {
 

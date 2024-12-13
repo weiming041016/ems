@@ -18,8 +18,6 @@ class CreateEmployeesSalariesTable extends Migration
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
             $table->decimal('basic_salary',10,2);
             $table->decimal('allowances',10,2);
-            $table->string('overtime_hours')->nullable();
-            $table->decimal('overtime_pay',10,2);
             $table->timestamps();
         });
     }

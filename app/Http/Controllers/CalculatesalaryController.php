@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEmployeesalary;
-use App\Models\Employee;
-use App\Models\employees_salary;
+use Carbon\Carbon;
 use App\Models\Payroll;
+use App\Models\Employee;
+use Illuminate\Http\Request;
+use App\Models\employees_salary;
 use App\Models\StatutoryDeduction;
 use Illuminate\Auth\Events\Validated;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreEmployeesalary;
 
 class CalculatesalaryController extends Controller
 {
@@ -27,8 +28,6 @@ class CalculatesalaryController extends Controller
 
     public function index(){
         $employees=employees_salary::latest()->paginate(10);
-
-        // dd($employees);
         return view("pages.employee_salary",compact("employees"));
     }
     public function salarysubmitform()
@@ -36,10 +35,15 @@ class CalculatesalaryController extends Controller
         $employees=$this->employees->all();
         return view("pages.employee_salary_create",compact("employees"));
     }
+    public function show(Employee $employee){
+        $payrolls=$employee->employeePayroll()->get();
+        
+        return view("pages.employee_salary_detail",compact("payrolls"));
+    }
 
-    public function salarysubmit(StoreEmployeesalary $request){
-        employees_salary::create($request->all());
-        return redirect()->route("admin.salarydata")->with('status', 'Successfully add salary detail.');
+    public function showpayslip(Payroll $payslip){
+        $employee=Employee::findOrFail(2); 
+        return view("pages.employee_data_payslip",compact("employee","payslip"));
     }
     
 
@@ -48,8 +52,8 @@ class CalculatesalaryController extends Controller
         foreach($employeesalary as $salary){
             $basic_salary=$salary->basic_salary;
             $allowance=$salary->allowances;
-            $overtime_pay=$salary->overtime_pay;
-            $is_state_2=$salary->employee->employeeDetail->age<=60 ? 0:1; 
+            $age=Carbon::parse($salary->employee->employeeDetail->date_of_birth)->age;
+            $is_state_2=$age<=60 ? 0:1; 
             // dd($is_state_2);
             $EPF=StatutoryDeduction::where('type', "EPF")
             ->where("salary_threshold",">=",$basic_salary)
@@ -71,7 +75,7 @@ class CalculatesalaryController extends Controller
             $EIS_employee_deduction=$basic_salary*($EIS->employee_rate/100);
             $EIS_employer_deduction=$basic_salary*($EIS->employer_rate/100);
 
-            $gross_salary = $basic_salary + $allowance + $overtime_pay;
+            $gross_salary = $basic_salary + $allowance;
 
             $total_statutory_deductions = $EPFemployee_deduction + $SOCSOemployee_deduction;
 
@@ -83,7 +87,7 @@ class CalculatesalaryController extends Controller
             $payrolls->basic_salary=$basic_salary;
             $payrolls->allowances=$allowance;
             $payrolls->overtime_hours=0;
-            $payrolls->overtime_pay=$overtime_pay;
+            $payrolls->overtime_pay=0;
             $payrolls->deductions=$total_statutory_deductions;
             $payrolls->gross_salary=$gross_salary;
             $payrolls->epf_employee=$EPFemployee_deduction;

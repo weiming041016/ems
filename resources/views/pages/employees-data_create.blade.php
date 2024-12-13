@@ -251,6 +251,27 @@
                 @enderror
               </div>
             </div>
+            <div class="row">
+              <div class="col-sm-12 col-lg-6">
+                <div class="form-group">
+                  <label for="email">Basic Salary:</label>
+                  <input type="number" class="form-control" id="basic_salary" name="basic_salary" value="{{ old('basic_salary') }}" placeholder="Enter basic salary" required>
+                </div>
+                @error('basic_salary')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="col-sm-12 col-lg-6">
+                <div class="form-group">
+                  <label for="allowances" class="form-label">allowances</label>
+                  <input type="number" class="form-control" name="allowances" value="{{ old('allowances') }}"  />
+                </div>
+                @error('allowances')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
+              </div>
+          </div>
+
   
             <div class="row">
               <div class="col-sm-12 col-lg-6">
@@ -264,6 +285,7 @@
               </div>
             </div>
           </div>
+          
 
           <div class="row">
             <div class="col-sm-12 col-lg-6">

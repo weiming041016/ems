@@ -18,7 +18,6 @@ class CreateEmployeeDetailsTable extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->string('identity_number');
             $table->string('name');
-            $table->integer("age");
             $table->char('gender', 1);
             $table->date('date_of_birth');
             $table->string('email');

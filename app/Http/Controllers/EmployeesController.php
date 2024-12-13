@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\EmployeeDetail;
 use App\Models\EmployeeLeave;
+use App\Models\employees_salary;
 use App\Models\Log;
 use App\Models\Position;
 use App\Models\Role;
@@ -92,6 +93,14 @@ class EmployeesController extends Controller
             'gpa' => $request->input('gpa'),
             'work_experience_in_years' => $request->input('work_experience_in_years'),
         ]);
+
+        $employee_sararies=employees_salary::create([
+            "employee_id"=>$employee->id,
+            "basic_salary"=>$request->input("basic_salary"),
+            "allowances"=>$request->input("allowances"),
+        ]);
+        
+
 
         $joinDate = $employee->date_of_joining; // 入职日期
         $currentDate = now(); // 当前日期

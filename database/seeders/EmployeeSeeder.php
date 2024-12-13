@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use App\Models\Employee;
 use App\Models\EmployeeDetail;
 use App\Models\EmployeeLeave;
+use App\Models\employees_salary;
 use App\Models\Recruitment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -30,6 +31,7 @@ class EmployeeSeeder extends Seeder
         $user = User::factory()->user()->create();
         $employee = Employee::factory()->create(['user_id' => $user->id, 'name' => $user->name]);
         EmployeeDetail::factory()->create(['employee_id' => $employee->id, 'name' => $employee->name, 'email' => $user->email]);
+        employees_salary::factory()->create(['employee_id'=>$employee->id]);
         // EmployeeLeave::factory()->create(['employee_id' => $employee->id]);
     }
 }

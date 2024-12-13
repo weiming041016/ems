@@ -41,6 +41,8 @@ class StoreEmployeeRequest extends FormRequest
             'cv' => 'required|mimetypes:application/pdf|max:2000|file',
             'last_education' => 'required',
             'gpa' => 'required',
+            "basic_salary" => "required|integer",
+            "allowances" => "required|integer",
             'work_experience_in_years' => 'required',
         ];
     }
