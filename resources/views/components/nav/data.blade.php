@@ -12,4 +12,7 @@
     <li class="nav-item">
         <a href="{{ route('positions-data') }}" class="nav-link">Positions</a>
     </li>
+    <li class="nav-item">
+        <a href="{{ route('salary-data') }}" class="nav-link">Salaries</a>
+    </li>
 </ul>

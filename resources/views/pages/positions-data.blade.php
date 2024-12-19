@@ -38,7 +38,7 @@
               <th scope="col" class="table-dark">Name</th>
               <th scope="col" class="table-dark">Description</th>
               <th scope="col" class="table-dark">Min. Experience (in years)</th>
-              <th scope="col" class="table-dark">Salary</th>
+              {{-- <th scope="col" class="table-dark">Salary</th> --}}
               <th scope="col" class="table-dark">Open for Recruitment</th>
             </tr>
           </thead>
@@ -49,7 +49,7 @@
               <td><a href="{{ route('positions-data.show', ['position' => $position->id ]) }}">{{ $position->name }}</a></td>
               <td class="w-25">{{ $position->description }}</td>
               <td>{{ $position->min_year_exp_required }}</td>
-              <td>{{ $position->salary }}</td>
+              {{-- <td>{{ $position->salary }}</td> --}}
               <td><input type="checkbox" name="open_for_recruitment" disabled value="{{ !!$position->open_for_recruitment }}" 
                 @if ($position->open_for_recruitment) 
                   checked

@@ -13,10 +13,6 @@
     <div class="col-12 mb-3">
       <div class="bg-light text-dark card p-3 overflow-auto">
         <div class="d-flex justify-content-between">
-          <a href="{{ route('employees-data.print') }}" class="btn btn-outline-dark mb-3 w-25" target="_blank">
-            <i class="fas fa-print mr-1"></i>
-              <span> Print</span>
-          </a>
         </div>
         @if (session('status'))
             <div class="alert alert-success">
@@ -37,7 +33,7 @@
                 <tr>
                     <td>{{ $payroll->employee->name }}</td>
                     <td>{{ $payroll->pay_date }}</td>
-                    <td><a class="btn btn-primary" href="{{ route('employee-data.payslip',$payroll->id ) }}">View</a></td>
+                    <td><a class="btn btn-primary" href="{{ route('salary-data.payslip',$payroll->id ) }}">View</a></td>
                 </tr>
             @endforeach
           </tbody>

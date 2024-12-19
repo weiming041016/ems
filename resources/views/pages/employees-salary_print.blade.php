@@ -1,5 +1,4 @@
-@extends('layouts.admin', ['accesses' => $accesses, 'active' => 'data'])
-
+@extends('layouts.print')
 @section('_content')
 <div class="container-fluid mt-4">
     <div class="row">
@@ -8,22 +7,18 @@
         </div>
     </div>
 
-    <a href="{{ route('salary-data.salary_print', $payslip->id) }}" class="btn btn-outline-dark mb-3 w-25" target="_blank">
-        <i class="fas fa-print mr-1"></i>
-          <span> Print</span>
-      </a>
     <div class="row mt-3">
         <div class="col-md-6">
             <p><strong>Name:</strong> {{ $employee->name }}</p>
             <p><strong>Position:</strong> {{ $employee->position->name }}</p>
         </div>
         <div class="col-md-6">
-            <p><strong>Date:</strong> {{ $payslip->pay_date->format('d-m-Y') }}</p>
-            <p><strong>Period:</strong> {{ $payslip->pay_date->format('M Y') }}</p>
+            <p><strong>Date:</strong> {{ now()->format('d M Y') }}</p>
+            <p><strong>Period:</strong> {{ $payslip->period }}</p>
             <p><strong>Department:</strong> {{ $employee->department->name }}</p>
-            {{-- <p><strong>EPF No.:</strong> {{ $employee->epf_no }}</p>
+            <p><strong>EPF No.:</strong> {{ $employee->epf_no }}</p>
             <p><strong>SOCSO No.:</strong> {{ $employee->socso_no }}</p>
-            <p><strong>Income Tax No.:</strong> {{ $employee->income_tax_no }}</p> --}}
+            <p><strong>Income Tax No.:</strong> {{ $employee->income_tax_no }}</p>
         </div>
     </div>
 
@@ -79,4 +74,12 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('_script')
+    <script>
+      window.onload = function () {
+        window.print();
+      }
+    </script>
 @endsection

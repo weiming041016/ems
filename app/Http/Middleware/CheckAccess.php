@@ -20,7 +20,7 @@ class CheckAccess
     {
         $name = explode(".", $request->route()->getName())[0];
 
-        if(in_array($name, array('employees-data', 'departments-data', 'positions-data'))){
+        if(in_array($name, array('employees-data', 'departments-data', 'positions-data','salary-data'))){
             $name = "data";
         } else if (in_array($name, array('users', 'roles'))) {
             $name = "accounts";

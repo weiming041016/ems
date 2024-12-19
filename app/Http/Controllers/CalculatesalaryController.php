@@ -21,6 +21,7 @@ class CalculatesalaryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        
         $this->employees=resolve(Employee::class);
         $this->totalday=26;
         $this->currect_month=date("m");
@@ -35,6 +36,8 @@ class CalculatesalaryController extends Controller
         $employees=$this->employees->all();
         return view("pages.employee_salary_create",compact("employees"));
     }
+    
+
     public function show(Employee $employee){
         $payrolls=$employee->employeePayroll()->get();
         
@@ -42,7 +45,8 @@ class CalculatesalaryController extends Controller
     }
 
     public function showpayslip(Payroll $payslip){
-        $employee=Employee::findOrFail(2); 
+        $employee=Employee::findOrFail($payslip->employee_id); 
+        $payslip->pay_date=Carbon::parse($payslip->pay_date);
         return view("pages.employee_data_payslip",compact("employee","payslip"));
     }
     
@@ -102,6 +106,14 @@ class CalculatesalaryController extends Controller
         }
         // return redirect()->route("admin.salarydata")->with('status', 'Successfully calculate salary.');
         return response("successfully");
+    }
+
+    public function print(Payroll $payslip)
+    {
+        // dd($payslip);
+        $employee=Employee::findOrFail($payslip->employee_id);
+        $payslip->pay_date=Carbon::parse($payslip->pay_date);
+        return view("pages.employees-salary_print",compact("employee","payslip"));
     }
     
 }

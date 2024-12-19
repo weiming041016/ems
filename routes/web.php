@@ -47,13 +47,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
     Route::post('/recruitment-candidates', [RecruitmentCandidatesController::class, 'store'])->name('recruitment-candidates.store');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::get('/salary-data',[CalculatesalaryController::class,'index'])->name('admin.salarydata');
-    Route::get('/admin-salary',[CalculatesalaryController::class,'salarysubmitform'])->name('admin.salaryform.create');
-    Route::get("/employee-salarydetail/{employee}",[CalculatesalaryController::class,'show'])->name('employee.salarydetail');
-    Route::get("/employee-data/payslip/{payslip}",[CalculatesalaryController::class,'showpayslip'])->name('employee-data.payslip');
-    Route::post('/admin-salary-submit',[CalculatesalaryController::class,'salarysubmit'])->name('admin.salarysubmit');
-    Route::get('/calculate-salary',[CalculatesalaryController::class,'calculatesalary'])->name('admin.calculatesalary');
+    
 
     Route::middleware('check.access')->group(function() {
         Route::get('/employees-data', [EmployeesController::class, 'index'])->name('employees-data');
@@ -138,5 +132,12 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
         Route::delete('/roles/{role}', [RolesController::class, 'destroy'])->name('roles.destroy');
         Route::get('/profile', [ProfilesController::class, 'index'])->name('profile');
         Route::put('/profile/{user}', [ProfilesController::class, 'update'])->name('profile.update');
-       
+        //salary
+        Route::get('/salary-data',[CalculatesalaryController::class,'index'])->name('salary-data');
+        Route::get('/admin-salary',[CalculatesalaryController::class,'salarysubmitform'])->name('salary-data.create');
+        Route::get("/employee-salarydetail/{employee}",[CalculatesalaryController::class,'show'])->name('salary-data.salarydetail');
+        Route::get("/employee-data/payslip/{payslip}",[CalculatesalaryController::class,'showpayslip'])->name('salary-data.payslip');
+        Route::post('/admin-salary-submit',[CalculatesalaryController::class,'salarysubmit'])->name('salary-data.salarysubmit');
+        Route::get('/calculate-salary',[CalculatesalaryController::class,'calculatesalary'])->name('salary-data.calculatesalary');
+        Route::get('/employees-salary_print/{payslip}',[CalculatesalaryController::class,'print'])->name('salary-data.salary_print');
     });
